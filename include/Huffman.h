@@ -9,19 +9,16 @@
 
 using namespace std;
 
-// Mapeamento de um char para string com a sequencia de bits
 map<char, string> codes;
 
-// "Liga" um char com um valor inteiro que referente a sua frequencia
 map<char, int> freq;
 
 int codeComps = 0;
 
-// Nó da arvore de Huffman
 struct MinHeapNode
 {
-    char data;             // Caracter do no
-    int freq;             // Numero de frequencia do Caracter
+    char data;             
+    int freq;             
     MinHeapNode* left, * right;
     MinHeapNode(char data, int freq)
     {
@@ -68,8 +65,6 @@ void storeCodes(struct MinHeapNode* root, string str)
     storeCodes(root->right, str + "1");
 }
 
-// Declaramos um fila de prioridade do tipo NoMinHeap, colocamos o container com os nos, e utilizamos a funcao para comparar e
-// gerar a fila de prioridade minHeap.
 static priority_queue<MinHeapNode*, vector<MinHeapNode*>, compare> minHeap;
 
 // function to build the Huffman tree and store it
@@ -131,7 +126,6 @@ string decode_file(struct MinHeapNode* root, string s)
             curr = root;
         }
     }
-    // cout<<ans<<endl;
     return ans + '\0';
 }
 
@@ -146,7 +140,7 @@ void printCharFrequence() {
 
 }
 
-//printCharCode
+
 void printCharCode() {
     for (auto v = codes.begin(); v != codes.end(); v++)
         cout << v->first << ' ' << v->second << ' ' << endl;
