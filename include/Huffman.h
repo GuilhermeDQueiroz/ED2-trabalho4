@@ -15,7 +15,7 @@ map<char, string> codes;
 // "Liga" um char com um valor inteiro que referente a sua frequencia
 map<char, int> freq;
 
-int comparacoesCodificacao = 0;
+int codeComps = 0;
 
 // Nó da arvore de Huffman
 struct MinHeapNode
@@ -57,11 +57,11 @@ void printCodes(struct MinHeapNode* root, string str)
 // have C++ STL map
 void storeCodes(struct MinHeapNode* root, string str)
 {
-    comparacoesCodificacao++;
+    codeComps++;
     if (root == NULL)
         return;
 
-    comparacoesCodificacao++;
+    codeComps++;
     if (root->data != '$')
         codes[root->data] = str;
     storeCodes(root->left, str + "0");
@@ -70,7 +70,7 @@ void storeCodes(struct MinHeapNode* root, string str)
 
 // Declaramos um fila de prioridade do tipo NoMinHeap, colocamos o container com os nos, e utilizamos a funcao para comparar e
 // gerar a fila de prioridade minHeap.
-priority_queue<MinHeapNode*, vector<MinHeapNode*>, compare> minHeap;
+static priority_queue<MinHeapNode*, vector<MinHeapNode*>, compare> minHeap;
 
 // function to build the Huffman tree and store it
 // in minHeap
@@ -79,10 +79,10 @@ void HuffmanCodes(int size)
     struct MinHeapNode* left, * right, * top;
     for (map<char, int>::iterator v = freq.begin(); v != freq.end(); v++) {
         minHeap.push(new MinHeapNode(v->first, v->second));
-        comparacoesCodificacao++;
+        codeComps++;
     }
 
-    comparacoesCodificacao++;
+    codeComps++;
     while (minHeap.size() != 1)
     {
         left = minHeap.top();
@@ -93,7 +93,7 @@ void HuffmanCodes(int size)
         top->left = left;
         top->right = right;
         minHeap.push(top);
-        comparacoesCodificacao++;
+        codeComps++;
     }
     storeCodes(minHeap.top(), "");
 }
@@ -102,10 +102,10 @@ void HuffmanCodes(int size)
 // frequency in input string
 void calcFreq(string str, int n)
 {
-    comparacoesCodificacao++;
+    codeComps++;
     for (int unsigned i = 0; i < str.size(); i++) {
         freq[str[i]]++;
-        comparacoesCodificacao++;
+        codeComps++;
     }
 }
 
@@ -155,11 +155,8 @@ void printCharCode() {
 
 double compressRate(string str_entrada, string str_saida) {
 
-    double numeroBytesSaida = str_saida.length() / 8;
-    //cout << endl << "str_entrada: " << str_entrada.length() << "B";
-    //cout << endl << "str_saida: " << str_saida.length() / 8 << "B" << endl;
-    //cout << endl << "((" << str_entrada.length() << " - " << numeroBytesSaida << "" << "/ " << str_entrada.length() << ")"<< endl;
-    return ((str_entrada.length() - numeroBytesSaida) / str_entrada.length());
+    double outputBytes = str_saida.length() / 8;
+    return ((str_entrada.length() - outputBytes) / str_entrada.length());
 
 }
 
@@ -167,7 +164,7 @@ void huffmanRestart() {
     codes.clear();
     freq.clear();
     minHeap = priority_queue<MinHeapNode*, vector<MinHeapNode*>, compare>();
-    comparacoesCodificacao = 0;
+    codeComps = 0;
 }
 
 #endif // HUFFMAN_H
