@@ -15,7 +15,7 @@ vector<Review> Review::readCsv(string path)
 
         int c = 0;
 
-        //Descartar cabeçalho
+        //Descartar cabeï¿½alho
         getline(arq, line);
 
         while (getline(arq, line))
@@ -37,7 +37,7 @@ vector<Review> Review::readCsv(string path)
                 Review review = Review::builder(object);
                 dataSet.push_back(review);
             }
-            catch (const exception& e)
+            catch (const exception &e)
             {
                 c++;
             }
@@ -56,7 +56,7 @@ vector<Review> Review::readCsv(string path)
     }
 }
 
-void Review::writeBinary(Review* data, int n)
+void Review::writeBinary(Review *data, int n)
 {
     fstream binaryFile("./tiktok_app_reviews.bin", ios::out | ios::binary);
     if (binaryFile.is_open())
@@ -64,7 +64,7 @@ void Review::writeBinary(Review* data, int n)
 
         int tamBlock = sizeof(Review) * n;
 
-        binaryFile.write((char*)data, tamBlock);
+        binaryFile.write((char *)data, tamBlock);
 
         binaryFile.close();
     }
@@ -72,13 +72,12 @@ void Review::writeBinary(Review* data, int n)
     {
         cout << "Falha ao abrir arquivo" << endl;
     }
-
 }
 
-Review* Review::readBinaryN(int n)
+Review *Review::readBinaryN(int n)
 {
-    Review* data = new Review[n];
-    Review* review = new Review;
+    Review *data = new Review[n];
+    Review *review = new Review;
 
     fstream binaryFile("./tiktok_app_reviews.bin", ios::in | ios::binary);
     if (binaryFile.is_open())
@@ -95,7 +94,7 @@ Review* Review::readBinaryN(int n)
             binaryFile.seekp(nRandom * sizeof(Review));
 
             // Realiza a leitura de registro
-            binaryFile.read((char*)review, sizeof(Review));
+            binaryFile.read((char *)review, sizeof(Review));
 
             data[i] = *review;
         }
@@ -107,7 +106,6 @@ Review* Review::readBinaryN(int n)
         exit(-1);
     }
 }
-
 
 /*Review* Review::accessBinaryI(int i) {
     Review* review = new Review;
@@ -131,7 +129,7 @@ Review* Review::readBinaryN(int n)
 }
 */
 
-int Review::sizeArq(fstream& arq)
+int Review::sizeArq(fstream &arq)
 {
     arq.seekg(0, arq.end);
     int tam = arq.tellg();
@@ -139,7 +137,7 @@ int Review::sizeArq(fstream& arq)
     return tam;
 }
 
-Review Review::builder(string* object)
+Review Review::builder(string *object)
 {
     Review review = Review();
     review.id = object[0];
@@ -151,7 +149,8 @@ Review Review::builder(string* object)
     return review;
 }
 
-void Review::printElement() {
+void Review::printElement()
+{
     cout << this->id << " , ";
     cout << this->text << " , ";
     cout << this->upvotes << " , ";
@@ -159,7 +158,8 @@ void Review::printElement() {
     cout << this->posted_date << endl;
 }
 
-void Review::writeElementTxt(Review* data, int n) {
+void Review::writeElementTxt(Review *data, int n)
+{
     ofstream arqSaida;
     arqSaida.open("ReviewArqSaida.txt");
 
@@ -179,6 +179,6 @@ void Review::writeElementTxt(Review* data, int n) {
     }
     else
     {
-        cout << "Erro ao abrir arquivo de saída" << endl;
+        cout << "Erro ao abrir arquivo de saï¿½da" << endl;
     }
 }

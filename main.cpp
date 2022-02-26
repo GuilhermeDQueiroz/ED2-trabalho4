@@ -19,11 +19,12 @@ string pathCsv;
 
 #define M 3
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     srand(time(NULL));
 
-    if (!verificaBinario("tiktok_app_reviews.bin")){
+    if (!verificaBinario("tiktok_app_reviews.bin"))
+    {
         if (argv[1])
         {
             pathCsv = argv[1];
@@ -37,50 +38,53 @@ int main(int argc, char* argv[])
         dataReview = Review::readCsv(pathCsv);
         Review::writeBinary(dataReview.data(), dataReview.size());
     }
-    
+
     huffmanRestart();
     int select;
-    
+
     cout << "Trabalho de ED II (Parte 4)" << endl;
     cout << "(1) - Comprimir Conjunto N" << endl
-        << "(2) - Descomprimir o Arquivo" << endl
-        << "(3) - Executar Sequencia de Compressoes" << endl
-        << "(0) - Sair" << endl;
-    
+         << "(2) - Descomprimir o Arquivo" << endl
+         << "(3) - Executar Sequencia de Compressoes" << endl
+         << "(0) - Sair" << endl;
+
     cin >> select;
 
-    while(select != 0){
-    
-        switch(select){
+    while (select != 0)
+    {
 
-        case 1: compressSet();
+        switch (select)
+        {
+
+        case 1:
+            compressSet();
             break;
 
-        case 2: decompressSet();
+        case 2:
+            decompressSet();
             break;
 
-            case 3: execSeqCompress();
+        case 3:
+            execSeqCompress();
             break;
 
-        case 0: exit(2);
+        case 0:
+            exit(2);
             break;
 
-        default: cout << "ERRO! Opcao invalida!" << endl;
-
+        default:
+            cout << "ERRO! Opcao invalida!" << endl;
         }
 
         cout << "Trabalho de ED II (Parte 4)" << endl;
         cout << "(1) - Comprimir Conjunto N" << endl
-            << "(2) - Descomprimir o Arquivo" << endl
-            << "(3) - Executar Sequencia de Compressoes" << endl
-            << "(0) - Sair" << endl;
+             << "(2) - Descomprimir o Arquivo" << endl
+             << "(3) - Executar Sequencia de Compressoes" << endl
+             << "(0) - Sair" << endl;
 
         cin >> select;
-
     }
-   
 }
-
 
 bool verificaBinario(string nome)
 {
@@ -94,8 +98,8 @@ bool verificaBinario(string nome)
     return false;
 }
 
-
-void compressSet() {
+void compressSet()
+{
     int n;
     cout << "Digite um valor N: ";
     cin >> n;
@@ -104,33 +108,35 @@ void compressSet() {
     auto dataInput = Review::readBinaryN(n);
     string codedData;
 
-    for (int i = 0; i < n; i++){
+    for (int i = 0; i < n; i++)
+    {
         auto text = dataInput[i].text;
-        
+
         huffmanRestart();
         calcFreq(text, text.length());
         HuffmanCodes(text.length());
 
-        for (auto i : text) {
+        for (auto i : text)
+        {
             codedData += codes[i];
         }
 
         if (binaryFile.is_open())
         {
-            binaryFile.write((char*)&codedData, sizeof(codedData));
+            binaryFile.write((char *)&codedData, sizeof(codedData));
         }
-        else {
+        else
+        {
             cout << "Erro! Arquivo fechado..." << endl;
         }
     }
-    
+
     binaryFile.close();
     cout << "reviewsComp.bin Criado com Sucesso!" << endl;
-    
 }
 
-
-void decompressSet() {
+void decompressSet()
+{
     fstream binaryFile("./reviewsComp.bin", ios::in | ios::binary);
 
     if (binaryFile.is_open())
@@ -138,15 +144,18 @@ void decompressSet() {
         ofstream arqSaida;
         arqSaida.open("reviewsOrig.txt");
 
-        if (arqSaida.is_open()){
-            if(minHeap.empty()){
+        if (arqSaida.is_open())
+        {
+            if (minHeap.empty())
+            {
                 cout << "ERRO! Arvore Vazia" << endl;
             }
             string coded;
             char aux = ' ';
-           
-            while(aux != EOF) {
-                binaryFile.read((char*)aux, sizeof(char));
+
+            while (aux != EOF)
+            {
+                binaryFile.read((char *)aux, sizeof(char));
                 coded += aux;
             }
 
@@ -157,49 +166,50 @@ void decompressSet() {
 
         binaryFile.close();
     }
-
 }
 
-
-void execCompressAux(int n, double* somaTaxaComp, double* somaComp, int leva){
+void execCompressAux(int n, double *somaTaxaComp, double *somaComp, int leva)
+{
     huffmanRestart();
-    
+
     string coded, decoded, text = Review::readBinaryN(n)->text;
     calcFreq(text, text.length());
     HuffmanCodes(text.length());
 
-    for (auto i : text) {
+    for (auto i : text)
+    {
         coded += codes[i];
     }
 
     double taxaComp = compressRate(text, coded) * 100;
-    cout << "Taxa de Compressao da Leva: " << leva  << " = " << taxaComp << endl;
+    cout << "Taxa de Compressao da Leva: " << leva << " = " << taxaComp << endl;
 
     *somaTaxaComp += taxaComp;
     *somaComp += codeComps;
-
 }
 
-
-void execSeqCompress(){
+void execSeqCompress()
+{
     string coded, decoded, text;
     double somaComp = 0, somaTaxaComp = 0;
 
-    for (int i = 0; i < M; i++){
-        execCompressAux(1000, &somaTaxaComp, &somaComp, i+1);
+    for (int i = 0; i < M; i++)
+    {
+        execCompressAux(1000, &somaTaxaComp, &somaComp, i + 1);
     }
 
     ofstream arqSaida;
     arqSaida.open("reviewsComp.txt");
-    
+
     arqSaida << "Media TaxaComp: " << somaTaxaComp / 3 << endl;
     arqSaida << "Media SomaComp: " << somaComp / 3 << endl;
 
     somaComp = 0;
     somaTaxaComp = 0;
 
-    for (int i = 0; i < M; i++) {
-        execCompressAux(5000, &somaTaxaComp, &somaComp, i+1);
+    for (int i = 0; i < M; i++)
+    {
+        execCompressAux(5000, &somaTaxaComp, &somaComp, i + 1);
     }
 
     arqSaida << "Media TaxaComp: " << somaTaxaComp / 3 << endl;
@@ -208,8 +218,9 @@ void execSeqCompress(){
     somaComp = 0;
     somaTaxaComp = 0;
 
-    for (int i = 0; i < M; i++) {
-        execCompressAux(10000, &somaTaxaComp, &somaComp, i+1);
+    for (int i = 0; i < M; i++)
+    {
+        execCompressAux(10000, &somaTaxaComp, &somaComp, i + 1);
     }
 
     arqSaida << "Media TaxaComp: " << somaTaxaComp / 3 << endl;
@@ -218,8 +229,9 @@ void execSeqCompress(){
     somaComp = 0;
     somaTaxaComp = 0;
 
-    for (int i = 0; i < M; i++) {
-        execCompressAux(100000, &somaTaxaComp, &somaComp, i+1);
+    for (int i = 0; i < M; i++)
+    {
+        execCompressAux(100000, &somaTaxaComp, &somaComp, i + 1);
     }
 
     arqSaida << "Media TaxaComp: " << somaTaxaComp / 3 << endl;
@@ -227,18 +239,13 @@ void execSeqCompress(){
 
     somaComp = 0;
     somaTaxaComp = 0;
-    
-    for (int i = 0; i < M; i++) {
-        execCompressAux(1000000, &somaTaxaComp, &somaComp, i+1);
+
+    for (int i = 0; i < M; i++)
+    {
+        execCompressAux(1000000, &somaTaxaComp, &somaComp, i + 1);
     }
-   
+
     arqSaida << "Media TaxaComp: " << somaTaxaComp / 3 << endl;
     arqSaida << "Media SomaComp: " << somaComp / 3 << endl;
     arqSaida.close();
-
 }
-
-
-
-
-

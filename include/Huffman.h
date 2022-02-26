@@ -17,9 +17,9 @@ int codeComps = 0;
 
 struct MinHeapNode
 {
-    char data;             
-    int freq;             
-    MinHeapNode* left, * right;
+    char data;
+    int freq;
+    MinHeapNode *left, *right;
     MinHeapNode(char data, int freq)
     {
         left = right = NULL;
@@ -31,7 +31,7 @@ struct MinHeapNode
 // utility function for the priority queue
 struct compare
 {
-    bool operator()(MinHeapNode* l, MinHeapNode* r)
+    bool operator()(MinHeapNode *l, MinHeapNode *r)
     {
         return (l->freq > r->freq);
     }
@@ -39,7 +39,7 @@ struct compare
 
 // utility function to print characters along with
 // there huffman value
-void printCodes(struct MinHeapNode* root, string str)
+void printCodes(struct MinHeapNode *root, string str)
 {
     if (!root)
         return;
@@ -52,7 +52,7 @@ void printCodes(struct MinHeapNode* root, string str)
 // utility function to store characters along with
 // there huffman value in a hash table, here we
 // have C++ STL map
-void storeCodes(struct MinHeapNode* root, string str)
+void storeCodes(struct MinHeapNode *root, string str)
 {
     codeComps++;
     if (root == NULL)
@@ -65,14 +65,15 @@ void storeCodes(struct MinHeapNode* root, string str)
     storeCodes(root->right, str + "1");
 }
 
-static priority_queue<MinHeapNode*, vector<MinHeapNode*>, compare> minHeap;
+static priority_queue<MinHeapNode *, vector<MinHeapNode *>, compare> minHeap;
 
 // function to build the Huffman tree and store it
 // in minHeap
 void HuffmanCodes(int size)
 {
-    struct MinHeapNode* left, * right, * top;
-    for (map<char, int>::iterator v = freq.begin(); v != freq.end(); v++) {
+    struct MinHeapNode *left, *right, *top;
+    for (map<char, int>::iterator v = freq.begin(); v != freq.end(); v++)
+    {
         minHeap.push(new MinHeapNode(v->first, v->second));
         codeComps++;
     }
@@ -98,7 +99,8 @@ void HuffmanCodes(int size)
 void calcFreq(string str, int n)
 {
     codeComps++;
-    for (int unsigned i = 0; i < str.size(); i++) {
+    for (int unsigned i = 0; i < str.size(); i++)
+    {
         freq[str[i]]++;
         codeComps++;
     }
@@ -108,10 +110,10 @@ void calcFreq(string str, int n)
 // if s[i]=='1' then move to node->right
 // if s[i]=='0' then move to node->left
 // if leaf node append the node->data to our output string
-string decode_file(struct MinHeapNode* root, string s)
+string decode_file(struct MinHeapNode *root, string s)
 {
     string ans = "";
-    struct MinHeapNode* curr = root;
+    struct MinHeapNode *curr = root;
     for (int unsigned i = 0; i < s.size(); i++)
     {
         if (s[i] == '0')
@@ -129,35 +131,37 @@ string decode_file(struct MinHeapNode* root, string s)
     return ans + '\0';
 }
 
-void printCharFrequence() {
-    cout << endl << "Caracter\t| Repeticoes\t| Codigo" << endl;
+void printCharFrequence()
+{
+    cout << endl
+         << "Caracter\t| Repeticoes\t| Codigo" << endl;
     auto c = codes.begin();
-    for (auto f = freq.begin(); f != freq.end() && c != codes.end(); f++) {
+    for (auto f = freq.begin(); f != freq.end() && c != codes.end(); f++)
+    {
 
         cout << f->first << "\t\t  " << f->second << "\t\t  " << c->second << endl;
         c++;
     }
-
 }
 
-
-void printCharCode() {
+void printCharCode()
+{
     for (auto v = codes.begin(); v != codes.end(); v++)
         cout << v->first << ' ' << v->second << ' ' << endl;
 }
 
-
-double compressRate(string str_entrada, string str_saida) {
+double compressRate(string str_entrada, string str_saida)
+{
 
     double outputBytes = str_saida.length() / 8;
     return ((str_entrada.length() - outputBytes) / str_entrada.length());
-
 }
 
-void huffmanRestart() {
+void huffmanRestart()
+{
     codes.clear();
     freq.clear();
-    minHeap = priority_queue<MinHeapNode*, vector<MinHeapNode*>, compare>();
+    minHeap = priority_queue<MinHeapNode *, vector<MinHeapNode *>, compare>();
     codeComps = 0;
 }
 
